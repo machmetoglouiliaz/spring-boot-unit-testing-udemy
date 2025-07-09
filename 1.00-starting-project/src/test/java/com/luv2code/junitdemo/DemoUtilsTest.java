@@ -8,7 +8,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 class DemoUtilsTest {
 
     DemoUtils demoUtils;
@@ -35,7 +36,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("Equals and Not Equals")
-    @Order(1)
+    //@Order(1)
     void testEqualsAndNotEquals() {
 
         DemoUtils demoUtils = new DemoUtils();
@@ -46,7 +47,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("Null and Not Null")
-    @Order(3)
+    //@Order(3)
     void testNullAndNotNull() {
 
         DemoUtils demoUtils = new DemoUtils();
@@ -57,7 +58,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("Same and Not Same")
-    @Order(1)
+    //@Order(1)
     void testSameAndNotSame() {
 
         String str = "luv2code";
@@ -68,7 +69,7 @@ class DemoUtilsTest {
 
     @Test
     @DisplayName("True and False")
-    @Order(-1)
+    //@Order(-1)
     void testTrueFalse() {
 
         int gradeOne = 10;
@@ -114,5 +115,11 @@ class DemoUtilsTest {
     @DisplayName("Timeout")
     void testTimeout(){
         assertTimeoutPreemptively(Duration.ofSeconds(3), () -> {demoUtils.checkTimeout();}, "Method should execute in 3 seconds");
+    }
+
+    @Test
+    @DisplayName("Multiply")
+    void testMultiply(){
+        assertEquals(12, demoUtils.multiply(4, 3), "4*3 should be 12");
     }
 }
