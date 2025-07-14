@@ -15,8 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MvcTestingExampleApplication.class)
@@ -71,5 +70,38 @@ public class MockAnnotationTest {
         when(appDao.checkNull(grades.getMathGradeResults())).thenReturn(true);
 
         assertNotNull(appService.checkNull(student.getStudentGrades().getMathGradeResults()), "Object should not be null");
+    }
+
+    @DisplayName("Throw runtime exception")
+    @Test
+    public void testThrowRuntimeError(){
+        CollegeStudent nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        doThrow(new RuntimeException()).when(appDao).checkNull(nullStudent);
+
+        assertThrows(RuntimeException.class,
+            () -> {
+                appService.checkNull(nullStudent);
+            });
+
+        verify(appDao, times(1)).checkNull(nullStudent);
+    }
+
+    @DisplayName("Multiple Stubbing")
+    @Test
+    public void stubbingConsecutiveCalls(){
+        CollegeStudent nullStudent = (CollegeStudent) context.getBean("collegeStudent");
+
+        when(appDao.checkNull(nullStudent))
+                .thenThrow(new RuntimeException())
+                .thenReturn("Do not throw exception second time");
+
+        assertThrows(RuntimeException.class, () -> {
+            appService.checkNull(nullStudent);
+        });
+
+        assertEquals("Do not throw exception second time", appService.checkNull(nullStudent));
+
+        verify(appDao, times(2)).checkNull(nullStudent);
     }
 }
