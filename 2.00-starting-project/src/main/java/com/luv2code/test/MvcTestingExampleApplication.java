@@ -1,6 +1,6 @@
-package com.luv2code.component;
+package com.luv2code.test;
 
-import com.luv2code.component.models.CollegeStudent;
+import com.luv2code.test.models.CollegeStudent;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

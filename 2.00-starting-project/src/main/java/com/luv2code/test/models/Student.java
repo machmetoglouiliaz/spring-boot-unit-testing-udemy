@@ -1,4 +1,4 @@
-package com.luv2code.component.models;
+package com.luv2code.test.models;
 
 public interface Student {
 

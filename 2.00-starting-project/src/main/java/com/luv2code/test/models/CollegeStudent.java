@@ -1,4 +1,4 @@
-package com.luv2code.component.models;
+package com.luv2code.test.models;
 
 public class CollegeStudent implements Student {
     private String firstname;
