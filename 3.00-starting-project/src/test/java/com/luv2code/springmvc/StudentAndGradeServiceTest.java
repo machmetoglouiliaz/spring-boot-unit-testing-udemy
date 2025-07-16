@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,5 +73,18 @@ public class StudentAndGradeServiceTest {
         student = studentDao.findById(1);
 
         assertFalse(student.isPresent(), "Shouldnt find a student with id 1");
+    }
+
+    @Sql("/insertData.sql")
+    @Test
+    public void getGradebookService(){
+        Iterable<CollegeStudent> collegeStudentIterable = studentService.getGradebook();
+        List<CollegeStudent> students = new ArrayList<>();
+
+        for(CollegeStudent student : collegeStudentIterable){
+            students.add(student);
+        }
+
+        assertEquals(6, students.size());
     }
 }

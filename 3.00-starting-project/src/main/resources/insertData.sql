@@ -1,0 +1,5 @@
+INSERT INTO student(id, firstname, lastname, email_address) VALUES (11, 'Mourat', 'Achmet1', 'm@g.com')
+INSERT INTO student(id, firstname, lastname, email_address) VALUES (12, 'Mourat', 'Achmet2', 'm@g.com')
+INSERT INTO student(id, firstname, lastname, email_address) VALUES (13, 'Mourat', 'Achmet3', 'm@g.com')
+INSERT INTO student(id, firstname, lastname, email_address) VALUES (14, 'Mourat', 'Achmet4', 'm@g.com')
+INSERT INTO student(id, firstname, lastname, email_address) VALUES (15, 'Mourat', 'Achmet5', 'm@g.com')
