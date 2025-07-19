@@ -1,6 +1,7 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,6 +43,9 @@ public class GradeBookControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    StudentDao studentDao;
 
     @Mock
     private StudentAndGradeService studentService;
@@ -90,6 +95,15 @@ public class GradeBookControllerTest {
 
     @Test
     public void createStudentHttpRequest() throws Exception{
+
+        CollegeStudent student1 = new CollegeStudent("Mourat", "Achmet", "m@g.com");
+
+        List<CollegeStudent> collegeStudentList = new ArrayList<>(Arrays.asList(student1));
+
+        when(studentService.getGradebook()).thenReturn(collegeStudentList);
+
+        assertIterableEquals(collegeStudentList, studentService.getGradebook());
+
         MvcResult mvcResult = this.mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("firstname", request.getParameterValues("firstname"))
@@ -101,6 +115,10 @@ public class GradeBookControllerTest {
         ModelAndView mav = mvcResult.getModelAndView();
 
         ModelAndViewAssert.assertViewName(mav, "index");
+
+        CollegeStudent searchedStudent = studentDao.findByEmailAddress("m@g.com");
+
+        assertNotNull(searchedStudent, "The student should not be null");
     }
 
 
