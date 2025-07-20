@@ -1,6 +1,8 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.MathGrade;
+import com.luv2code.springmvc.repository.MathGradeDao;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.*;
@@ -29,6 +31,9 @@ public class StudentAndGradeServiceTest {
 
     @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    private MathGradeDao mathGradeDao;
 
     @BeforeEach
     public void beforeEach(){
@@ -86,5 +91,16 @@ public class StudentAndGradeServiceTest {
         }
 
         assertEquals(6, students.size());
+    }
+
+    @Test
+    public void createGradeService(){
+        assertTrue(studentService.createGrade(80.50, 1, "math"));
+
+        assertTrue(studentService.checkIfStudentIsNull(1), "Student is null");
+
+        Iterable<MathGrade> mathGrades = mathGradeDao.findGradeByStudentId(1);
+
+        assertTrue(mathGrades.iterator().hasNext(), "Student has math grades");
     }
 }
