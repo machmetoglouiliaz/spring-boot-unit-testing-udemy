@@ -1,9 +1,6 @@
 package com.luv2code.springmvc;
 
-import com.luv2code.springmvc.models.CollegeStudent;
-import com.luv2code.springmvc.models.HistoryGrade;
-import com.luv2code.springmvc.models.MathGrade;
-import com.luv2code.springmvc.models.ScienceGrade;
+import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.repository.HistoryGradeDao;
 import com.luv2code.springmvc.repository.MathGradeDao;
 import com.luv2code.springmvc.repository.ScienceGradeDao;
@@ -162,5 +159,28 @@ public class StudentAndGradeServiceTest {
     public void deleteGradeServiceReturnStudentIdOfZero(){
         assertEquals(0, studentService.deleteGrade(0, "science"), "No student should have id 0");
         assertEquals(0, studentService.deleteGrade(1, "notype"), "There is no notype class");
+    }
+
+    @Test
+    public void studentInformation() {
+
+        GradebookCollegeStudent student = studentService.studentInformation(1);
+
+        assertNotNull(student);
+        assertEquals(1, student.getId());
+        assertEquals("Mourat", student.getFirstname());
+        assertEquals("Achmet", student.getLastname());
+        assertEquals("m@g.com", student.getEmailAddress());
+        assertEquals(1, student.getStudentGrades().getMathGradeResults().size());
+        assertEquals(1, student.getStudentGrades().getScienceGradeResults().size());
+        assertEquals(1, student.getStudentGrades().getHistoryGradeResults().size());
+
+    }
+
+    @Test
+    public void studentInformationServiceReturnNull() {
+        GradebookCollegeStudent student = studentService.studentInformation(0);
+
+        assertNull(student);
     }
 }
