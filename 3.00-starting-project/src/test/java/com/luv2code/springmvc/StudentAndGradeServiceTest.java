@@ -92,13 +92,25 @@ public class StudentAndGradeServiceTest {
     @Test
     public void deleteStudentService(){
         Optional<CollegeStudent> student = studentDao.findById(1);
+        Optional<MathGrade> deletedMathGrade = mathGradeDao.findById(1);
+        Optional<ScienceGrade> deletedScienceGrade = scienceGradeDao.findById(1);
+        Optional<HistoryGrade> deletedHistoryGrade = historyGradeDao.findById(1);
 
         assertTrue(student.isPresent(), "Didnt find student with id 1");
+        assertTrue(deletedMathGrade.isPresent(), "Didnt find math grade with id 1");
+        assertTrue(deletedScienceGrade.isPresent(), "Didnt find science grade with id 1");
+        assertTrue(deletedHistoryGrade.isPresent(), "Didnt find history grade with id 1");
 
         studentService.deleteStudent(1);
         student = studentDao.findById(1);
+        deletedMathGrade = mathGradeDao.findById(1);
+        deletedScienceGrade = scienceGradeDao.findById(1);
+        deletedHistoryGrade = historyGradeDao.findById(1);
 
-        assertFalse(student.isPresent(), "Shouldnt find a student with id 1");
+        assertFalse(student.isPresent(), "Shouldn't find a student with id 1");
+        assertFalse(deletedMathGrade.isPresent(), "Shouldn't find math grade with id 1");
+        assertFalse(deletedScienceGrade.isPresent(), "Shouldn't find science grade with id 1");
+        assertFalse(deletedHistoryGrade.isPresent(), "Shouldn't find history grade with id 1");
     }
 
     @Sql("/insertData.sql")
@@ -144,5 +156,11 @@ public class StudentAndGradeServiceTest {
         assertEquals(1, studentService.deleteGrade(1, "math"), "Returns student id after delete");
         assertEquals(1, studentService.deleteGrade(1, "science"), "Returns student id after delete");
         assertEquals(1, studentService.deleteGrade(1, "history"), "Returns student id after delete");
+    }
+
+    @Test
+    public void deleteGradeServiceReturnStudentIdOfZero(){
+        assertEquals(0, studentService.deleteGrade(0, "science"), "No student should have id 0");
+        assertEquals(0, studentService.deleteGrade(1, "notype"), "There is no notype class");
     }
 }
