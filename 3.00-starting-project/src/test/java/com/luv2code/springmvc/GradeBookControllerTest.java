@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -36,6 +37,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 public class GradeBookControllerTest {
 
+    @Value("${sql.student.create}")
+    private String createStudentScript;
+
+    @Value("${sql.mathgrade.create}")
+    private String createMathScript;
+
+    @Value("${sql.sciencegrade.create}")
+    private String createScienceScript;
+
+    @Value("${sql.historygrade.create}")
+    private String createHistoryScript;
+
+    @Value("${sql.student.delete}")
+    private String deleteStudentScript;
+
+    @Value("${sql.mathgrade.delete}")
+    private String deleteMathScript;
+
+    @Value("${sql.sciencegrade.delete}")
+    private String deleteScienceScript;
+
+    @Value("${sql.historygrade.delete}")
+    private String deleteHistoryScript;
+
     private static MockHttpServletRequest request;
 
     @Autowired
@@ -61,15 +86,19 @@ public class GradeBookControllerTest {
     @BeforeEach
     public void beforeEach() {
 
-        jdbc.execute("INSERT INTO student(firstname, lastname, email_address) " + "VALUES ('Mourat', 'Achmet', 'm@g.com')");
+        jdbc.execute(createStudentScript);
+        jdbc.execute(createMathScript);
+        jdbc.execute(createScienceScript);
+        jdbc.execute(createHistoryScript);
     }
 
     @AfterEach
     public void afterEach() {
 
-        jdbc.execute("DELETE FROM student");
-
-        jdbc.execute("ALTER TABLE student ALTER COLUMN ID RESTART WITH 1");
+        jdbc.execute(deleteStudentScript);
+        jdbc.execute(deleteMathScript);
+        jdbc.execute(deleteScienceScript);
+        jdbc.execute(deleteHistoryScript);
     }
 
     @Test
