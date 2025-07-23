@@ -8,6 +8,7 @@ import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
@@ -24,6 +25,30 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 public class StudentAndGradeServiceTest {
+
+    @Value("${sql.student.create}")
+    private String createStudentScript;
+
+    @Value("${sql.mathgrade.create}")
+    private String createMathScript;
+
+    @Value("${sql.sciencegrade.create}")
+    private String createScienceScript;
+
+    @Value("${sql.historygrade.create}")
+    private String createHistoryScript;
+
+    @Value("${sql.student.delete}")
+    private String deleteStudentScript;
+
+    @Value("${sql.mathgrade.delete}")
+    private String deleteMathScript;
+
+    @Value("${sql.sciencegrade.delete}")
+    private String deleteScienceScript;
+
+    @Value("${sql.historygrade.delete}")
+    private String deleteHistoryScript;
 
     @Autowired
     private JdbcTemplate jdbc;
@@ -46,25 +71,19 @@ public class StudentAndGradeServiceTest {
     @BeforeEach
     public void beforeEach(){
 
-        jdbc.execute("INSERT INTO student(firstname, lastname, email_address) " +
-                "VALUES ('Mourat', 'Achmet', 'm@g.com')");
-        jdbc.execute("insert into math_grade(student_id, grade) values (1, 100.00)");
-        jdbc.execute("insert into science_grade(student_id, grade) values (1, 100.00)");
-        jdbc.execute("insert into history_grade(student_id, grade) values (1, 100.00)");
+        jdbc.execute(createStudentScript);
+        jdbc.execute(createMathScript);
+        jdbc.execute(createScienceScript);
+        jdbc.execute(createHistoryScript);
     }
 
     @AfterEach
     public void afterEach(){
 
-        jdbc.execute("DELETE FROM student");
-        jdbc.execute("DELETE FROM math_grade");
-        jdbc.execute("DELETE FROM science_grade");
-        jdbc.execute("DELETE FROM history_grade");
-
-        jdbc.execute("ALTER TABLE student ALTER COLUMN ID RESTART WITH 1");
-        jdbc.execute("ALTER TABLE math_grade ALTER COLUMN ID RESTART WITH 1");
-        jdbc.execute("ALTER TABLE science_grade ALTER COLUMN ID RESTART WITH 1");
-        jdbc.execute("ALTER TABLE history_grade ALTER COLUMN ID RESTART WITH 1");
+        jdbc.execute(deleteStudentScript);
+        jdbc.execute(deleteMathScript);
+        jdbc.execute(deleteScienceScript);
+        jdbc.execute(deleteHistoryScript);
 
     }
 
