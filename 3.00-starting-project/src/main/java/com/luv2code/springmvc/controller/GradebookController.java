@@ -52,32 +52,8 @@ public class GradebookController {
 			return "error";
 		}
 
-		GradebookCollegeStudent studentEntity = studentService.studentInformation(id);
+		studentService.configureStudentInformationModel(id, m);
 
-		m.addAttribute("student", studentEntity);
-		if(!studentEntity.getStudentGrades().getMathGradeResults().isEmpty()) {
-			m.addAttribute("mathAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getMathGradeResults()
-			));
-		} else {
-			m.addAttribute("mathAverage", "N/A");
-		}
-
-		if(!studentEntity.getStudentGrades().getScienceGradeResults().isEmpty()) {
-			m.addAttribute("scienceAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getScienceGradeResults()
-			));
-		} else {
-			m.addAttribute("scienceAverage", "N/A");
-		}
-
-		if(!studentEntity.getStudentGrades().getHistoryGradeResults().isEmpty()) {
-			m.addAttribute("historyAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getHistoryGradeResults()
-			));
-		} else {
-			m.addAttribute("historyAverage", "N/A");
-		}
 		return "studentInformation";
 	}
 
@@ -86,7 +62,7 @@ public class GradebookController {
 							  @RequestParam("gradeType") String gradeType,
 							  @RequestParam("studentId") int studentId,
 							  Model m){
-		if(!studentService.checkIfStudentIsNull(1)){
+		if(!studentService.checkIfStudentIsNull(studentId)){
 			return "error";
 		}
 
@@ -96,33 +72,11 @@ public class GradebookController {
 			return "error";
 		}
 
-		GradebookCollegeStudent studentEntity = studentService.studentInformation(studentId);
+		studentService.configureStudentInformationModel(studentId, m);
 
-		m.addAttribute("student", studentEntity);
-		if(!studentEntity.getStudentGrades().getMathGradeResults().isEmpty()) {
-			m.addAttribute("mathAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getMathGradeResults()
-			));
-		} else {
-			m.addAttribute("mathAverage", "N/A");
-		}
-
-		if(!studentEntity.getStudentGrades().getScienceGradeResults().isEmpty()) {
-			m.addAttribute("scienceAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getScienceGradeResults()
-			));
-		} else {
-			m.addAttribute("scienceAverage", "N/A");
-		}
-
-		if(!studentEntity.getStudentGrades().getHistoryGradeResults().isEmpty()) {
-			m.addAttribute("historyAverage", studentEntity.getStudentGrades().findGradePointAverage(
-					studentEntity.getStudentGrades().getHistoryGradeResults()
-			));
-		} else {
-			m.addAttribute("historyAverage", "N/A");
-		}
 		return "studentInformation";
 	}
+
+
 
 }
