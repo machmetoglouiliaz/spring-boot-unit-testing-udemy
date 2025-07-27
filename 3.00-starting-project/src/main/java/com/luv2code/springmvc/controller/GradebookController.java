@@ -3,6 +3,7 @@ package com.luv2code.springmvc.controller;
 import com.luv2code.springmvc.models.*;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +53,50 @@ public class GradebookController {
 		}
 
 		GradebookCollegeStudent studentEntity = studentService.studentInformation(id);
+
+		m.addAttribute("student", studentEntity);
+		if(!studentEntity.getStudentGrades().getMathGradeResults().isEmpty()) {
+			m.addAttribute("mathAverage", studentEntity.getStudentGrades().findGradePointAverage(
+					studentEntity.getStudentGrades().getMathGradeResults()
+			));
+		} else {
+			m.addAttribute("mathAverage", "N/A");
+		}
+
+		if(!studentEntity.getStudentGrades().getScienceGradeResults().isEmpty()) {
+			m.addAttribute("scienceAverage", studentEntity.getStudentGrades().findGradePointAverage(
+					studentEntity.getStudentGrades().getScienceGradeResults()
+			));
+		} else {
+			m.addAttribute("scienceAverage", "N/A");
+		}
+
+		if(!studentEntity.getStudentGrades().getHistoryGradeResults().isEmpty()) {
+			m.addAttribute("historyAverage", studentEntity.getStudentGrades().findGradePointAverage(
+					studentEntity.getStudentGrades().getHistoryGradeResults()
+			));
+		} else {
+			m.addAttribute("historyAverage", "N/A");
+		}
+		return "studentInformation";
+	}
+
+	@PostMapping(value = "/grades")
+	public String createGrade(@RequestParam("grade") double grade,
+							  @RequestParam("gradeType") String gradeType,
+							  @RequestParam("studentId") int studentId,
+							  Model m){
+		if(!studentService.checkIfStudentIsNull(1)){
+			return "error";
+		}
+
+		boolean success = studentService.createGrade(grade, studentId, gradeType);
+
+		if(!success){
+			return "error";
+		}
+
+		GradebookCollegeStudent studentEntity = studentService.studentInformation(studentId);
 
 		m.addAttribute("student", studentEntity);
 		if(!studentEntity.getStudentGrades().getMathGradeResults().isEmpty()) {

@@ -1,6 +1,7 @@
 package com.luv2code.springmvc;
 
 import com.luv2code.springmvc.models.CollegeStudent;
+import com.luv2code.springmvc.models.GradebookCollegeStudent;
 import com.luv2code.springmvc.repository.StudentDao;
 import com.luv2code.springmvc.service.StudentAndGradeService;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +21,6 @@ import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -72,8 +72,11 @@ public class GradeBookControllerTest {
     @Autowired
     StudentDao studentDao;
 
-    @Mock
+    @Autowired
     private StudentAndGradeService studentService;
+
+    @Mock
+    private StudentAndGradeService studentServiceMock;
 
     @BeforeAll
     public static void setup(){
@@ -109,9 +112,9 @@ public class GradeBookControllerTest {
 
         List<CollegeStudent> collegeStudentList = new ArrayList<>(Arrays.asList(student1, student2));
 
-        when(studentService.getGradebook()).thenReturn(collegeStudentList);
+        when(studentServiceMock.getGradebook()).thenReturn(collegeStudentList);
 
-        assertIterableEquals(collegeStudentList, studentService.getGradebook());
+        assertIterableEquals(collegeStudentList, studentServiceMock.getGradebook());
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
@@ -129,9 +132,9 @@ public class GradeBookControllerTest {
 
         List<CollegeStudent> collegeStudentList = new ArrayList<>(Arrays.asList(student1));
 
-        when(studentService.getGradebook()).thenReturn(collegeStudentList);
+        when(studentServiceMock.getGradebook()).thenReturn(collegeStudentList);
 
-        assertIterableEquals(collegeStudentList, studentService.getGradebook());
+        assertIterableEquals(collegeStudentList, studentServiceMock.getGradebook());
 
         MvcResult mvcResult = this.mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -200,6 +203,30 @@ public class GradeBookControllerTest {
         ModelAndView mav = mvcResult.getModelAndView();
 
         ModelAndViewAssert.assertViewName(mav, "error");
+    }
+    @Test
+    public void createValidGradeHttpRequest() throws Exception{
+        assertTrue(studentDao.findById(1).isPresent());
+
+        GradebookCollegeStudent student = studentService.studentInformation(1);
+
+        assertEquals(1, student.getStudentGrades().getMathGradeResults().size());
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/grades")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("grade", "85.00")
+                .param("gradeType", "math")
+                .param("studentId", "1"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        ModelAndView mav = mvcResult.getModelAndView();
+
+        ModelAndViewAssert.assertViewName(mav, "studentInformation");
+
+        student = studentService.studentInformation(1);
+
+        assertEquals(2, student.getStudentGrades().getMathGradeResults().size());
     }
 
 }
